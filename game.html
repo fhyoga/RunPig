@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Boring Game</title>
+    <style>
+        *{margin: 0;padding: 0}
+        body{background-color: #222}
+        .stage{background-color: aliceblue;position: relative;width: 500px;height: 600px;margin: 5px auto;
+                border: 3px solid #838383;overflow: hidden }
+        .fps-wrap{position: absolute;top:10px;left: 20px}
+        .floor-count-wrap{position: absolute;top: 10px;right: 20px}
+        .pig{background:url("pig.png") no-repeat ;background-size:cover;position: absolute}
+        .floor{position: absolute;background-color: aqua}
+    </style>
+</head>
+<body>
+<div class="stage">
+    <div class="fps-wrap">FPS:<span id="fps">0</span></div>
+    <div class="floor-count-wrap"><span id="floor-count">0</span>层</div>
+    <div class="game-start">
+        <button id="button-start">Start</button>
+    </div>
+    <div class="game-over">
+        <button id="play-again">Play again</button>
+    </div>
+</div>
+<script>
+    var fps=60,
+        fpsNode=document.getElementById('fps'),
+        floorCountNode=document.getElementById('floor-count'),
+        stageNode=document.getElementsByClassName('stage')[0],
+        gameStartNode=document.getElementsByClassName('game-start')[0],
+        buttonStartNode=document.getElementById('button-start'),
+        gameOverNode=document.getElementsByClassName('game-over')[0],
+        againNode=document.getElementById('play-again'),
+        margin=0;
+
+
+//pig 对象属性和方法
+    function Pig(hit) {
+        this.x=stageNode.clientWidth/2;
+        this.y=0;
+        this.height=30;
+        this.width=40;
+        this.xSpeed=2;
+        this.ySpeed=5;
+        this.leftMove=false;
+        this.rightMove=false;
+        this.domNode=null;
+        this.init()
+    }
+    Pig.prototype={
+//        初始化pig 并添加dom
+        init:function () {
+            var pigNode=document.createElement('div');
+            pigNode.className="pig";
+            pigNode.style.height=this.height+'px';
+            pigNode.style.width=this.width+'px';
+            pigNode.style.top=this.y+'px';
+            pigNode.style.left=this.x+'px';
+            stageNode.appendChild(pigNode);
+            this.domNode=pigNode
+        },
+
+
+//        碰撞检测
+        hitCheck:function () {
+
+        },
+
+
+//        运动计算
+        move:function () {
+            if (this.leftMove){
+                this.x=this.x-this.xSpeed
+            }else if (this.rightMove){
+                this.x=this.x+this.xSpeed
+            }
+            this.y+=this.ySpeed
+        },
+//        触发渲染
+        render:function () {
+            this.move();
+            this.domNode.style.left=this.x+'px';
+            this.domNode.style.top=this.y+'px';
+        },
+
+//        销毁pig
+        destroy:function () {
+            this.domNode.parentNode.removeChild(this.domNode)
+        }
+    };
+//    取随机数
+    function getRandom(min,max) {
+        return Math.floor(Math.random()*(max-min)+min)
+    }
+
+//    floor 属性和方法
+
+    function Floor() {
+        this.x=getRandom(0,stageNode.clientWidth-50);
+        this.y=stageNode.clientHeight;
+        this.ySpeed=2;
+        this.height=20;
+        this.width=getRandom(stageNode.clientWidth/3,stageNode.clientWidth/2);
+        this.domMode=null;
+        this.init();
+    }
+    Floor.prototype={
+        init:function () {
+            var floorNode=document.createElement('div');
+                floorNode.className='floor';
+                floorNode.style.height=this.height+'px';
+                floorNode.style.width=this.width+'px';
+                floorNode.style.left=this.x+'px';
+                floorNode.style.top=this.y+'px';
+                stageNode.appendChild(floorNode);
+                this.domMode=floorNode;
+                margin+=20;
+                if (margin>20){
+                    margin=0
+                }
+        },
+        getRange:function () {
+            return {
+                left:this.x,
+                right:this.x+this.width,
+                top:this.y,
+                bottom:this.y+this.height
+            }
+        },
+        move:function () {
+            this.y-=this.ySpeed;
+            if(this.y<0){
+                this.destroy();
+                floorArr.splice(0,1)
+            }
+        },
+        render:function () {
+            this.move();
+            this.domMode.style.top=this.y+'px';
+        },
+        destroy:function () {
+            this.domMode.parentNode.removeChild(this.domMode)
+        }
+    };
+    var floorArr=[];
+    function createFloor(random) {
+        random=getRandom(0,600);
+        if(floorArr.length<1){
+            floorArr.push(new Floor())
+        }else if (random<10&&floorArr.length<4){
+            floorArr.push(new Floor())
+        }
+    }
+    var pigPlayer=new Pig();
+
+    function main() {
+        createFloor();
+        for(var i=0;i<floorArr.length;i++){
+            floorArr[i].render();
+        }
+        pigPlayer.render()
+        }
+
+        setInterval(main,1000/60)
+</script>
+</body>
+</html>
