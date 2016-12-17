@@ -10,11 +10,15 @@
         *{margin: 0;padding: 0}
         body{background-color: #222}
         .stage{background-color: aliceblue;position: relative;width: 500px;height: 600px;margin: 5px auto;
-                border: 3px solid #838383;overflow: hidden }
-        .fps-wrap{position: absolute;top:10px;left: 20px}
-        .floor-count-wrap{position: absolute;top: 10px;right: 20px}
+                border: 3px solid #838383;overflow: hidden ;text-align: center}
+        .fps-wrap{position: absolute;top:20px;left: 20px;z-index: 11}
+        .floor-count-wrap{position: absolute;top: 10px;right: 20px;z-index: 11;font-size: 30px}
+        #floor-count{color: brown;margin-right: 10px}
         .pig{background:url("pig.png") no-repeat ;background-size:cover;position: absolute}
         .floor{position: absolute;background-color: aqua}
+        .game-start,.game-over{position: absolute;top: 50%;width: 100%;height: 300px;margin-top: -150px;
+            background-color: #222222;line-height: 150px;font-size: 50px;color: aliceblue;border-radius:5px;z-index: 11}
+        button{font-size: 30px;border: none;border-radius: 5px;cursor: pointer}
     </style>
 </head>
 <body>
@@ -22,9 +26,11 @@
     <div class="fps-wrap">FPS:<span id="fps">0</span></div>
     <div class="floor-count-wrap"><span id="floor-count">0</span>层</div>
     <div class="game-start">
-        <button id="button-start">Start</button>
+        <p>RunPig</p>
+        <button id="button-start">Run</button>
     </div>
     <div class="game-over">
+        <p>Game Over</p>
         <button id="play-again">Play again</button>
     </div>
 </div>
@@ -37,7 +43,9 @@
         buttonStartNode=document.getElementById('button-start'),
         gameOverNode=document.getElementsByClassName('game-over')[0],
         againNode=document.getElementById('play-again'),
-        margin=0;
+        addFactor=0,
+        realFps=0,
+        floorCount=0;
 
 
 //pig 对象属性和方法
@@ -102,7 +110,7 @@
 //    floor 属性和方法
 
     function Floor() {
-        this.x=getRandom(0,stageNode.clientWidth-50);
+        this.x=getRandom(0,stageNode.clientWidth-80);
         this.y=stageNode.clientHeight;
         this.ySpeed=2;
         this.height=20;
@@ -120,10 +128,7 @@
                 floorNode.style.top=this.y+'px';
                 stageNode.appendChild(floorNode);
                 this.domMode=floorNode;
-                margin+=20;
-                if (margin>20){
-                    margin=0
-                }
+
         },
         getRange:function () {
             return {
@@ -145,29 +150,50 @@
             this.domMode.style.top=this.y+'px';
         },
         destroy:function () {
-            this.domMode.parentNode.removeChild(this.domMode)
+            this.domMode.parentNode.removeChild(this.domMode);
+            floorCount++
         }
     };
     var floorArr=[];
+
+//    生成floor row
     function createFloor(random) {
-        random=getRandom(0,600);
-        if(floorArr.length<1){
+        random=Math.random();
+        var k=floorArr.length;
+        if(k<1){
             floorArr.push(new Floor())
-        }else if (random<10&&floorArr.length<4){
+        }else if (random<0.5&&k<4&&addFactor==60){
             floorArr.push(new Floor())
         }
+        addFactor++;
+        if (addFactor>60){
+            addFactor=0
+        }
+        realFps++;
     }
     var pigPlayer=new Pig();
 
+//    主渲染函数
     function main() {
         createFloor();
         for(var i=0;i<floorArr.length;i++){
             floorArr[i].render();
         }
+        floorCountNode.innerHTML=floorCount;
         pigPlayer.render()
         }
-
-        setInterval(main,1000/60)
+//        初始化游戏
+    function gameInit() {
+        
+    }
+    function getRealFps() {
+        fpsNode.innerHTML=realFps;
+        realFps=0;
+        console.log(fpsNode.innerHTML);
+        setTimeout(getRealFps,1000)
+    }
+getRealFps();
+        setInterval(main,1000/fps)
 </script>
 </body>
 </html>
