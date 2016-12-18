@@ -113,21 +113,22 @@
 //    rightNode.touchend=function () {
 //        pigPlayer.rightMove=false
 //    };
-    leftNode.addEventListener('touchstart',function (e) {
+    console.log("createTouch" in document);
+    leftNode.addEventListener('touchstart',function () {
         pigPlayer.leftMove=true;
-        e.preventDefault()
+        event.preventDefault()
     });
-    leftNode.addEventListener('touchend',function (e) {
+    leftNode.addEventListener('touchend',function () {
         pigPlayer.leftMove=false;
-        e.preventDefault()
+        event.preventDefault()
     });
-    rightNode.addEventListener('touchstart',function (e) {
+    rightNode.addEventListener('touchstart',function () {
         pigPlayer.rightMove=true;
-        e.preventDefault()
+        event.preventDefault()
     });
-    rightNode.addEventListener('touchend',function (e) {
+    rightNode.addEventListener('touchend',function () {
         pigPlayer.rightMove=false;
-        e.preventDefault()
+        event.preventDefault()
     });
 
 
