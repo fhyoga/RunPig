@@ -323,18 +323,18 @@
                 y = event.accelerationIncludingGravity.y;
             if (window.orientation == 90 || window.orientation == -90) {
                 if (y < -5) {
-                    pigPlayer.leftMove = true;
-                } else if (y > 5) {
                     pigPlayer.rightMove = true;
+                } else if (y > 5) {
+                    pigPlayer.leftMove = true;
                 } else {
                     pigPlayer.leftMove = false;
                     pigPlayer.rightMove = false;
                 }
             } else {
                 if (x < -5) {
-                    pigPlayer.leftMove = true;
-                } else if (x > 5) {
                     pigPlayer.rightMove = true;
+                } else if (x > 5) {
+                    pigPlayer.leftMove = true;
                 } else {
                     pigPlayer.leftMove = false;
                     pigPlayer.rightMove = false;
