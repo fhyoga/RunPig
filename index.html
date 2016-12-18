@@ -113,17 +113,21 @@
 //    rightNode.touchend=function () {
 //        pigPlayer.rightMove=false
 //    };
-    leftNode.addEventListener('touchstart',function () {
-        pigPlayer.leftMove=true
+    leftNode.addEventListener('touchstart',function (e) {
+        pigPlayer.leftMove=true;
+        e.preventDefault()
     });
-    leftNode.addEventListener('touchend',function () {
-        pigPlayer.leftMove=false
+    leftNode.addEventListener('touchend',function (e) {
+        pigPlayer.leftMove=false;
+        e.preventDefault()
     });
-    rightNode.addEventListener('touchstart',function () {
-        pigPlayer.rightMove=true
+    rightNode.addEventListener('touchstart',function (e) {
+        pigPlayer.rightMove=true;
+        e.preventDefault()
     });
-    rightNode.addEventListener('touchend',function () {
-        pigPlayer.rightMove=false
+    rightNode.addEventListener('touchend',function (e) {
+        pigPlayer.rightMove=false;
+        e.preventDefault()
     });
 
 
