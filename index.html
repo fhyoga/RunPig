@@ -100,36 +100,6 @@
         }
     };
 
-//    绑定左右屏点击
-    leftNode.ontouchstart=function () {
-        pigPlayer.leftMove=true
-    };
-//    leftNode.touchend=function () {
-//        pigPlayer.leftMove=false
-//    };
-//    rightNode.touchstart=function () {
-//        pigPlayer.rightMove=true
-//    };
-//    rightNode.touchend=function () {
-//        pigPlayer.rightMove=false
-//    };
-    console.log("createTouch" in document);
-    leftNode.addEventListener('touchstart',function () {
-        pigPlayer.leftMove=true;
-        event.preventDefault()
-    });
-    leftNode.addEventListener('touchend',function () {
-        pigPlayer.leftMove=false;
-        event.preventDefault()
-    });
-    rightNode.addEventListener('touchstart',function () {
-        pigPlayer.rightMove=true;
-        event.preventDefault()
-    });
-    rightNode.addEventListener('touchend',function () {
-        pigPlayer.rightMove=false;
-        event.preventDefault()
-    });
 
 
     //pig 对象属性和方法
