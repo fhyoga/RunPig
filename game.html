@@ -13,18 +13,21 @@
         }
 
         body {
-            background-color: #222
+            background-color: #222;
         }
 
         .stage {
             background-color: aliceblue;
             position: relative;
-            width: 500px;
-            height: 600px;
+            width: 100vw;
+            max-width: 500px;
+            height: 100vh;
+            /*max-height: 600px;*/
             margin: 5px auto;
             border: 3px solid #838383;
             overflow: hidden;
-            text-align: center
+            text-align: center;
+            box-sizing: border-box;
         }
 
         .fps-wrap {
@@ -74,6 +77,13 @@
 
         .game-over {
             display: none;
+            line-height: 60px;
+        }
+        .grades-wrap,.best-wrap{
+            font-size: 30px;
+        }
+        #best,#grades{
+            color: brown;
         }
 
         button {
@@ -94,6 +104,8 @@
     </div>
     <div class="game-over">
         <p>Game Over</p>
+        <p class="grades-wrap">得分<span id="grades"></span></p>
+        <p class="best-wrap">最高分<span id="best"></span></p>
         <button id="play-again">Play again</button>
     </div>
 </div>
@@ -113,7 +125,9 @@
         floorCount = 0,
         pigPlayer = null,
         timer = null,
-        gameOverState = false;
+        gameOverState = false,
+        gradesNode=document.getElementById('grades'),
+        bestNode=document.getElementById('best');
 
     buttonStartNode.onclick = function () {
         gameInit();
@@ -151,7 +165,7 @@
 
 
     //pig 对象属性和方法
-    function Pig(hit) {
+    function Pig() {
         this.x = stageNode.clientWidth / 2;
         this.y = 0;
         this.height = 30;
@@ -161,7 +175,6 @@
         this.leftMove = false;
         this.rightMove = false;
         this.domNode = null;
-        this.hit = false;
         this.init()
     }
     Pig.prototype = {
@@ -342,21 +355,62 @@
     //    游戏结束
     function gameOver() {
         pigPlayer.destroy();
+        gradesNode.innerHTML=floorCount;
+
+//      读取写入localStorage
+
+        if(localStorage.best&&localStorage.best>floorCount){
+            bestNode.innerHTML=localStorage.best
+        }else {
+            localStorage.best=floorCount;
+            bestNode.innerHTML=floorCount
+        }
         floorArr.forEach(function (value) {
             value.destroy()
         });
         floorArr = [];
         gameOverNode.style.display = 'block';
         clearInterval(timer);
-        clearTimeout(timerOut)
+        clearTimeout(timerOut);
+
     }
     var timerOut = null;
+
+//    用Interval和Timeout差值得到真实fps
     function getRealFps() {
         if (gameOverState) return;
         fpsNode.innerHTML = realFps;
         realFps = 0;
         timerOut = setTimeout(getRealFps, 1000);
-        console.log('111')
+    }
+
+
+//    调用设备传感器 适配重力感应
+    window.ondevicemotion = function (e) {
+        if (e.accelerationIncludingGravity&&pigPlayer) {
+            var x = event.accelerationIncludingGravity.x,
+                y = event.accelerationIncludingGravity.y;
+            if (window.orientation == 90 || window.orientation == -90) {
+                if (y < -5) {
+                    pigPlayer.leftMove = true;
+                } else if (y > 5) {
+                    pigPlayer.rightMove = true;
+                } else {
+                    pigPlayer.leftMove = false;
+                    pigPlayer.rightMove = false;
+                }
+            } else {
+                if (x < -5) {
+                    pigPlayer.leftMove = true;
+                } else if (x > 5) {
+                    pigPlayer.rightMove = true;
+                } else {
+                    pigPlayer.leftMove = false;
+                    pigPlayer.rightMove = false;
+                }
+            }
+        }
+
     }
 </script>
 </body>
