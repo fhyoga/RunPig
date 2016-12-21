@@ -14,7 +14,8 @@
         .fps-wrap {position: absolute;top: 20px;left: 20px;z-index: 11}
         .floor-count-wrap {position: absolute;top: 10px;right: 20px;z-index: 11;font-size: 30px}
         #floor-count {color: brown;margin-right: 10px}
-        .pig {background: url("pig.png") no-repeat;background-size: cover;position: absolute}
+        .pig {background: url("07.gif") -25px -5px no-repeat;background-size: 96px;  position: absolute}
+        .pig.rotate{transform: rotateY(180deg)}
         .floor {position: absolute;background-color: #40433e}
         .game-start, .game-over {position: absolute;top: 50%;width: 100%;height: 300px;margin-top: -150px;
             background-color: #222222;line-height: 150px;font-size: 50px;color: aliceblue;border-radius: 5px;z-index: 11
@@ -81,9 +82,12 @@
         switch (e.keyCode) {
             case 37 :
                 pigPlayer.leftMove = true;
+                pigPlayer.domNode.className='pig';
                 break;
             case 39 :
                 pigPlayer.rightMove = true;
+                pigPlayer.domNode.className='pig rotate';
+                console.log(pigPlayer.domNode.style);
                 break;
         }
     };
@@ -99,14 +103,29 @@
                 break;
         }
     };
+    leftNode.addEventListener('touchstart',function () {
+        pigPlayer.leftMove = true;
+        pigPlayer.domNode.className='pig';
+    });
+    leftNode.addEventListener('touchend',function () {
+        pigPlayer.leftMove = false;
 
+    });
+    rightNode.addEventListener('touchstart',function () {
+        pigPlayer.rightMove = true;
+        pigPlayer.domNode.className = 'pig rotate';
+    });
+    rightNode.addEventListener('touchend',function () {
+
+        pigPlayer.rightMove = false;
+    });
 
 
     //pig 对象属性和方法
     function Pig() {
         this.x = stageNode.clientWidth / 2;
         this.y = 0;
-        this.height = 30;
+        this.height = 35;
         this.width = 40;
         this.xSpeed = 4;
         this.ySpeed = 5;
@@ -176,7 +195,6 @@
                     this.ySpeed = 0;
                 }
             }
-
             this.y += this.ySpeed;
 
         },
