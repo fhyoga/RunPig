@@ -347,8 +347,10 @@
             if (window.orientation == 90 || window.orientation == -90) {
                 if (y < -5) {
                     pigPlayer.rightMove = true;
+                    pigPlayer.domNode.className='pig rotate';
                 } else if (y > 5) {
                     pigPlayer.leftMove = true;
+                    pigPlayer.domNode.className='pig';
                 } else {
                     pigPlayer.leftMove = false;
                     pigPlayer.rightMove = false;
@@ -356,8 +358,10 @@
             } else {
                 if (x < -5) {
                     pigPlayer.rightMove = true;
+                    pigPlayer.domNode.className='pig rotate';
                 } else if (x > 5) {
                     pigPlayer.leftMove = true;
+                    pigPlayer.domNode.className='pig';
                 } else {
                     pigPlayer.leftMove = false;
                     pigPlayer.rightMove = false;
